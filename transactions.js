@@ -319,18 +319,23 @@ function sleep(sleepTime) {
 etherscanProvider.getTransactionCount(wallet.address).then(function(transactionCount) {
     var count = transactionCount;
     console.log(count);
-    for (var i = 0; i <= 8; i++) {
+    for (let i = 0; i <= 8; i++) {
+    	(function(t){
+    	setTimeout(() => {
     	var overrideOptions = {
     		gasLimit: 1500000,
     		gasPrice: 10000000000,
-    		nonce: count + i,
+    		nonce: count + t,
     		value: ethers.utils.parseEther('0')
 		};
     	
 		console.log(overrideOptions.nonce);
-		console.log(to[i]);
+		console.log(to[t]);
+		console.log(i);
+		console.log(amount);
+		console.log(to[0]);
 
-    	var sendPromise = tokenContract.transfer(to[i], amount);
+    	var sendPromise = tokenContract.transfer(to[t], amount);
     	sendPromise.then(function(transaction) {
 			console.log("******************************************\n" +
 						"next transaction" + 
@@ -341,8 +346,9 @@ etherscanProvider.getTransactionCount(wallet.address).then(function(transactionC
 						"====ERROR====" + 
 						"\n****************************************\n");
     		console.log(err);
-		});
-		sleep(10000);	
+		});},2000*t+2000);
+    })(i);
+		// sleep(10000);	
     }
 });
 
