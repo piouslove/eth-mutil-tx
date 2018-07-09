@@ -5,6 +5,7 @@ var Wallet = ethers.Wallet;
 var providers = ethers.providers;
 
 var network = providers.networks.ropsten;
+// var etherscanProvider = new providers.InfuraProvider(network);
 var etherscanProvider = new providers.EtherscanProvider(network);
 
 var privateKey = "0xe2eb333fa5d664872489fae18a257a77f2a1c19eeed8aeebf5c4889ec2cb8aab";
@@ -311,11 +312,14 @@ var to = [
 var utils = require('ethers').utils;
 var amount = utils.bigNumberify('1000000000000000000');
 
+function sleep(sleepTime) {
+    for(var start = +new Date; +new Date - start <= sleepTime; ) { } 
+}
+
 etherscanProvider.getTransactionCount(wallet.address).then(function(transactionCount) {
     var count = transactionCount;
     console.log(count);
-    for (let i = 0; i <= 8; i++) {
-    	
+    for (var i = 0; i <= 8; i++) {
     	var overrideOptions = {
     		gasLimit: 1500000,
     		gasPrice: 10000000000,
@@ -338,6 +342,7 @@ etherscanProvider.getTransactionCount(wallet.address).then(function(transactionC
 						"\n****************************************\n");
     		console.log(err);
 		});
+		sleep(10000);	
     }
 });
 
