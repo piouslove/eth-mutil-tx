@@ -10,7 +10,7 @@ var etherscanProvider = new providers.EtherscanProvider(network);
 
 var privateKey = "0xe2eb333fa5d664872489fae18a257a77f2a1c19eeed8aeebf5c4889ec2cb8aab";
 var wallet = new Wallet(privateKey, etherscanProvider);
-console.log("Address: " + wallet.address);
+// console.log("Address: " + wallet.address);
 
 var tokenAddress = '0x4ede434043c47e9774cd7d28a040c28dd757ddfa';
 var tokenABI = [
@@ -312,105 +312,44 @@ var to = [
 var utils = require('ethers').utils;
 var amount = utils.bigNumberify('1000000000000000000');
 
-function sleep(sleepTime) {
-    for(var start = +new Date; +new Date - start <= sleepTime; ) { } 
+var iface = new ethers.Interface(tokenABI);
+
+function generateTX(count, transactionCount) {
+	var txInfo = iface.functions.transfer(to[count], amount);
+	var data = txInfo.data;
+
+	// console.log(data);
+
+	var transaction = {
+    	nonce: transactionCount + count,
+    	gasLimit: 150000,
+    	gasPrice: utils.bigNumberify("10000000000"),
+
+	    to: "0x88a5C2d9919e46F883EB62F7b8Dd9d0CC45bc290",
+
+    	value: utils.parseEther("0.0"),
+    	data: data,
+
+    	// This ensures the transaction cannot be replayed on different networks
+    	chainId: providers.networks.ropsten.chainId
+
+	};
+
+
+	var signedTransaction = wallet.sign(transaction);
+
+	etherscanProvider.sendTransaction(signedTransaction).then(function(hash) {
+    	console.log('Hash' + count + ': ' + hash);
+    	// Hash:
+	});
 }
 
 etherscanProvider.getTransactionCount(wallet.address).then(function(transactionCount) {
-    var count = transactionCount;
-    console.log(count);
-    for (let i = 0; i <= 8; i++) {
-    	(function(t){
-    	setTimeout(() => {
-    	var overrideOptions = {
-    		gasLimit: 1500000,
-    		gasPrice: 10000000000,
-    		nonce: count + t,
-    		value: ethers.utils.parseEther('0')
-		};
-    	
-		console.log(overrideOptions.nonce);
-		console.log(to[t]);
-		console.log(i);
-		console.log(amount);
-		console.log(to[0]);
-
-    	var sendPromise = tokenContract.transfer(to[t], amount);
-    	sendPromise.then(function(transaction) {
-			console.log("****************************************\n" +
-						"next transaction" + 
-						"\n****************************************\n");	
-    		console.log(transaction);
-    	}).catch(function(err) {
-    		console.log("****************************************\n" +
-						"====ERROR====" + 
-						"\n****************************************\n");
-    		console.log(err);
-		});},2000*t+2000);
-    })(i);
-		// sleep(10000);	
-    }
+	for (let i = 0; i <= 8; i++) {
+		console.log(transactionCount);
+		setTimeout(function(){generateTX(i, transactionCount)}, 500*i+500);
+	}
 });
-
-
-// var sendPromise = tokenContract.transfer(to[0], value);
-
-/*
-sendPromise.then(function(transaction) {
-	console.log("******************************************\nnext transaction\n***************************************************");	
-    console.log(transaction);
-    setTimeout(function() {
-      tokenContract.transfer(to[1], value);
-    }, 10000);
-}).then(function(transaction) {
-	console.log("******************************************\nnext transaction\n***************************************************");
-    console.log(transaction);
-    setTimeout(function() {
-      tokenContract.transfer(to[2], value);
-    }, 10000);
-}).then(function(transaction) {
-	console.log("******************************************\nnext transaction\n***************************************************");
-    console.log(transaction);
-    setTimeout(function() {
-      tokenContract.transfer(to[3], value);
-    }, 10000);
-}).then(function(transaction) {
-	console.log("******************************************\nnext transaction\n***************************************************");
-    console.log(transaction);
-    setTimeout(function() {
-      tokenContract.transfer(to[4], value);
-    }, 10000);
-}).then(function(transaction) {
-	console.log("******************************************\nnext transaction\n***************************************************");
-    console.log(transaction);
-    setTimeout(function() {
-      tokenContract.transfer(to[5], value);
-    }, 10000);
-}).then(function(transaction) {
-	console.log("******************************************\nnext transaction\n***************************************************");
-    console.log(transaction);
-    setTimeout(function() {
-      tokenContract.transfer(to[6], value);
-    }, 10000);
-}).then(function(transaction) {
-	console.log("******************************************\nnext transaction\n***************************************************");
-    console.log(transaction);
-    setTimeout(function() {
-      tokenContract.transfer(to[7], value);
-    }, 10000);
-}).then(function(transaction) {
-	console.log("******************************************\nnext transaction\n***************************************************");
-    console.log(transaction);
-    setTimeout(function() {
-      tokenContract.transfer(to[8], value);
-    }, 10000);
-}).catch(function(err) {
-    console.log(err);
-});	
-*/
-
-
-
 
 
 
