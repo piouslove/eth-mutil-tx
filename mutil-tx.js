@@ -7,11 +7,11 @@ var providers = ethers.providers;
 var network = providers.networks.ropsten;
 var etherscanProvider = new providers.EtherscanProvider(network);
 
-var privateKey = "0xe2eb333fa5d664872489fae18a257a77f2a1c19eeed8aeebf5c4889ec2cb8aab";
+var privateKey = ""; // 填入发送者私钥
 var wallet = new Wallet(privateKey, etherscanProvider);
 console.log("Address: " + wallet.address);
 
-var tokenAddress = '0x4ede434043c47e9774cd7d28a040c28dd757ddfa';
+var tokenAddress = '0x4ede434043c47e9774cd7d28a040c28dd757ddfa'; // 填入token地址
 var tokenABI = [
 	{
 		"constant": true,
@@ -306,7 +306,7 @@ var to = [
 		'0xFac0B36b787636273fE2038b7C7eD449f6aF11f5',
 		'0xB242476bd1F9E533B8AAA58eD2800F8b27c22C3A',
 		'0x01c35164C1B5430F69eb5Cb1D0ae021Cca7335FB'
-		];
+		]; // 收款地址数组
 
 var utils = require('ethers').utils;
 var value = utils.bigNumberify('1000000000000000000');

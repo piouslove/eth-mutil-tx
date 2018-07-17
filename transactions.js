@@ -8,7 +8,7 @@ var network = providers.networks.ropsten;
 // var etherscanProvider = new providers.InfuraProvider(network);
 var etherscanProvider = new providers.EtherscanProvider(network);
 
-var privateKey = "0xe2eb333fa5d664872489fae18a257a77f2a1c19eeed8aeebf5c4889ec2cb8aab";
+var privateKey = "";
 var wallet = new Wallet(privateKey, etherscanProvider);
 console.log("Address: " + wallet.address);
 
